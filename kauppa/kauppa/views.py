@@ -6,10 +6,8 @@ ETUSIVU_HTML = """
 <html>
 <body>
 <h1>Kauppa</h1>
-Osta täältä 
-<a href="/tuote/1/">tuotetta 1</a>
-tai
-<a href="/tuote/2/">tuotetta 2</a>.
+Osta täältä:<br>
+{}
 </body>
 </html>
 """
@@ -30,9 +28,15 @@ Nyt tarjouksessa. Osta heti!
 """
 
 def etusivu(request):
+    tuotelinkit = []
     for tuote in Tuote.objects.all():
-        print(tuote)
-    return HttpResponse(ETUSIVU_HTML)
+        linkki = '<a href="/tuote/{id}/">{nimi}</a>'.format(
+            id=tuote.id,
+            nimi=tuote.nimi,
+        )
+        tuotelinkit.append(linkki)
+    linkkiteksti = '<br>'.join(tuotelinkit)
+    return HttpResponse(ETUSIVU_HTML.format(linkkiteksti))
 
 
 def tuotesivu(request, tuote_id):
